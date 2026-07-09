@@ -574,8 +574,7 @@ TEST(CassisMapping, intToEnum) {
 TEST(UnsupportedDistortion, applyThrows) {
   double dx, dy;
   std::vector<double> coeffs;
-  // An out-of-range distortion type must throw, not silently pass the point
-  // through undistorted.
+  // Throw on an out-of-range distortion type.
   EXPECT_THROW(applyDistortion(10.0, 10.0, dx, dy, coeffs, 1000.0,
                                static_cast<DistortionType>(999), 1e-7),
                csm::Error);
@@ -592,8 +591,7 @@ TEST(UnsupportedDistortion, removeThrows) {
 TEST(LunarOrbiter, applyThrows) {
   double dx, dy;
   std::vector<double> coeffs;
-  // LUNARORBITER is declared but its distortion math is unimplemented, so it
-  // must throw rather than silently apply no distortion.
+  // LUNARORBITER is unimplemented, so it must throw.
   EXPECT_THROW(applyDistortion(10.0, 10.0, dx, dy, coeffs, 1000.0,
                                DistortionType::LUNARORBITER, 1e-7),
                csm::Error);
