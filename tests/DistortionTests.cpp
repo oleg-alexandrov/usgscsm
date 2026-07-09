@@ -1,5 +1,6 @@
 #include "Distortion.h"
 
+#include <Error.h>
 #include <gtest/gtest.h>
 
 #include "Fixtures.h"
@@ -568,4 +569,40 @@ TEST(CassisMapping, intToEnum) {
   DistortionType dt =
       getDistortionModel(static_cast<int>(ale::DistortionType::CASSIS));
   EXPECT_EQ(dt, DistortionType::CASSIS);
+}
+
+TEST(UnsupportedDistortion, applyThrows) {
+  double dx, dy;
+  std::vector<double> coeffs;
+  // An out-of-range distortion type must throw, not silently pass the point
+  // through undistorted.
+  EXPECT_THROW(applyDistortion(10.0, 10.0, dx, dy, coeffs, 1000.0,
+                               static_cast<DistortionType>(999), 1e-7),
+               csm::Error);
+}
+
+TEST(UnsupportedDistortion, removeThrows) {
+  double ux, uy;
+  std::vector<double> coeffs;
+  EXPECT_THROW(removeDistortion(10.0, 10.0, ux, uy, coeffs, 1000.0,
+                                static_cast<DistortionType>(999), 1e-7),
+               csm::Error);
+}
+
+TEST(LunarOrbiter, applyThrows) {
+  double dx, dy;
+  std::vector<double> coeffs;
+  // LUNARORBITER is declared but its distortion math is unimplemented, so it
+  // must throw rather than silently apply no distortion.
+  EXPECT_THROW(applyDistortion(10.0, 10.0, dx, dy, coeffs, 1000.0,
+                               DistortionType::LUNARORBITER, 1e-7),
+               csm::Error);
+}
+
+TEST(LunarOrbiter, removeThrows) {
+  double ux, uy;
+  std::vector<double> coeffs;
+  EXPECT_THROW(removeDistortion(10.0, 10.0, ux, uy, coeffs, 1000.0,
+                                DistortionType::LUNARORBITER, 1e-7),
+               csm::Error);
 }

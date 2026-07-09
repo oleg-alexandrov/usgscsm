@@ -463,6 +463,26 @@ void removeDistortion(double dx, double dy, double &ux, double &uy,
       return;
     } break;
 
+    // LUNARORBITER is a declared distortion type (emitted by ALE as
+    // "lunarorbiter") but its distortion math was never implemented here.
+    // Throw rather than fall through, which would silently apply no distortion.
+    case LUNARORBITER:
+      throw csm::Error(csm::Error::UNSUPPORTED_FUNCTION,
+                       "LUNARORBITER distortion is not implemented.",
+                       "removeDistortion");
+      break;
+
+    // An unrecognized distortion type must fail loudly. Falling through the
+    // switch would silently leave the point undistorted, hiding the fact that
+    // the model was not applied. This also guards against a model state that
+    // stores a distortion type this build does not know about.
+    default:
+      throw csm::Error(csm::Error::UNSUPPORTED_FUNCTION,
+                       "Unsupported distortion type: " +
+                           std::to_string(static_cast<int>(distortionType)),
+                       "removeDistortion");
+      break;
+
   }
 }
 
@@ -836,10 +856,30 @@ void applyDistortion(double ux, double uy, double &dx, double &dy,
     case RADTAN:
     {
       ux /= focalLength; uy /= focalLength; // Find normalized coordinates
-      computeRadTanDistortion(ux, uy, dx, dy, opticalDistCoeffs);  
+      computeRadTanDistortion(ux, uy, dx, dy, opticalDistCoeffs);
       dx *= focalLength; dy *= focalLength; // Convert back to pixel coordinates
-    }  
+    }
     break;
-    
+
+    // LUNARORBITER is a declared distortion type (emitted by ALE as
+    // "lunarorbiter") but its distortion math was never implemented here.
+    // Throw rather than fall through, which would silently apply no distortion.
+    case LUNARORBITER:
+      throw csm::Error(csm::Error::UNSUPPORTED_FUNCTION,
+                       "LUNARORBITER distortion is not implemented.",
+                       "applyDistortion");
+      break;
+
+    // An unrecognized distortion type must fail loudly. Falling through the
+    // switch would silently leave the point undistorted, hiding the fact that
+    // the model was not applied. This also guards against a model state that
+    // stores a distortion type this build does not know about.
+    default:
+      throw csm::Error(csm::Error::UNSUPPORTED_FUNCTION,
+                       "Unsupported distortion type: " +
+                           std::to_string(static_cast<int>(distortionType)),
+                       "applyDistortion");
+      break;
+
   }
 }
