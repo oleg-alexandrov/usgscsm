@@ -492,25 +492,29 @@ csm::Model *UsgsAstroPlugin::constructModelFromISD(
   std::string stringIsd = loadImageSupportData(imageSupportDataOriginal);
   LOG_TRACE( "ISD string: {}", stringIsd);
 #ifndef __EMSCRIPTEN__
-  // Try to get the projected model, if not return the the unprojected model
-  UsgsAstroProjectedSensorModel *projModel = new UsgsAstroProjectedSensorModel();
-
-  try {
-    LOG_DEBUG( "Trying to construct a UsgsAstroProjectedSensorModel");
-    VariantMap vm = projModel->constructStateFromIsd(stringIsd, modelName, warnings);
-    projModel->populateModel(vm);
-    LOG_DEBUG( "Constructed model: {}", modelName);
-    return projModel;
-  } catch (std::exception &e) {
-    delete projModel;
-    csm::Error::ErrorType aErrorType =
-        csm::Error::SENSOR_MODEL_NOT_CONSTRUCTIBLE;
-    std::string aMessage = "Could not construct model [";
-    aMessage += modelName;
-    aMessage += "] with error [";
-    aMessage += e.what();
-    aMessage += "]";
-    LOG_ERROR( aMessage);
+  // Attempt the projected sensor model only when the ISD actually declares a
+  // projection. A projected ISD carries a "geotransform"; a frame or unprojected
+  // linescan ISD does not, and attempting the projected model on it would always
+  // fail on the missing geotransform. So this attempt is made only for a
+  // projected ISD, in which case a failure here is a genuine error and is logged
+  // as one. A non-projected ISD falls straight through to the unprojected model.
+  if (stringIsd.find("\"geotransform\"") != std::string::npos) {
+    UsgsAstroProjectedSensorModel *projModel = new UsgsAstroProjectedSensorModel();
+    try {
+      LOG_DEBUG( "Trying to construct a UsgsAstroProjectedSensorModel");
+      VariantMap vm = projModel->constructStateFromIsd(stringIsd, modelName, warnings);
+      projModel->populateModel(vm);
+      LOG_DEBUG( "Constructed model: {}", modelName);
+      return projModel;
+    } catch (std::exception &e) {
+      delete projModel;
+      std::string aMessage = "Could not construct model [";
+      aMessage += modelName;
+      aMessage += "] with error [";
+      aMessage += e.what();
+      aMessage += "]";
+      LOG_ERROR( aMessage);
+    }
   }
 #endif
 
