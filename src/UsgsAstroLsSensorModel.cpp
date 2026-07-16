@@ -2865,8 +2865,10 @@ VariantMap UsgsAstroLsSensorModel::constructStateFromIsd(
       state["m_platformFlag"].dump(), state["m_ikCode"].dump(),
       state["m_zDirection"].dump());
 
+  // Map the ISD distortion name to usgscsm's own DistortionType directly,
+  // rather than routing through ale's enum (see the frame model for details).
   state["m_distortionType"] =
-      getDistortionModel(ale::getDistortionModel(jsonIsd));
+      getDistortionModel(jsonIsd);
   state["m_opticalDistCoeffs"] = ale::getDistortionCoeffs(jsonIsd);
   LOG_TRACE(
       "m_distortionType: {} "

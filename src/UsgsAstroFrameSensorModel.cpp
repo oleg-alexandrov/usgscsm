@@ -1808,9 +1808,11 @@ VariantMap UsgsAstroFrameSensorModel::constructStateFromIsd(
     state["m_currentParameterValue"][6] = quaternions[3];
   }
 
-  // get optical_distortion
+  // get optical_distortion. Map the ISD distortion name to usgscsm's own
+  // DistortionType directly, rather than routing through ale's enum, so the
+  // selected type never depends on ale's enum integers matching usgscsm's.
   state["m_distortionType"] =
-      getDistortionModel(ale::getDistortionModel(parsedIsd));
+      getDistortionModel(parsedIsd);
   state["m_opticalDistCoeffs"] = ale::getDistortionCoeffs(parsedIsd);
 
   // get detector_center
