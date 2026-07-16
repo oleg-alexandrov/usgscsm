@@ -1793,18 +1793,20 @@ double getSemiMinorRadius(json isd, csm::WarningList *list) {
 }
 
 /**
- * @description Converts the distortion model name from the ISD JSON object to
- * the enumeration type. This function searches the "optical_distortion" field
- * for a key that matches a known distortion model name and converts it to the
- * corresponding DistortionType enum. Throws std::runtime_error if the
- * "optical_distortion" field is missing or its model name is not recognized,
- * rather than silently defaulting to a distortion type.
+ * @description Converts the distortion model name from the ISD JSON object to 
+ * the enumeration type. This function searches the "optical_distortion" field 
+ * for a key that matches a known distortion model name and converts it to the 
+ * corresponding DistortionType enum. Defaults to DistortionType::TRANSVERSE if 
+ * no match is found or the model cannot be parsed.
  *
  * @param isd The ISD JSON object containing the optical distortion information.
- * @param list Unused; retained for API compatibility.
+ * @param list Pointer to a csm::WarningList where warnings are added if the 
+ * distortion model name cannot be parsed from the ISD. This parameter is 
+ * optional; pass nullptr if you do not need to capture warnings.
  *
- * @return The DistortionType enum corresponding to the distortion model found
- * in the ISD.
+ * @return The DistortionType enum corresponding to the distortion model found 
+ * in the ISD. Returns DistortionType::TRANSVERSE by default if the model name 
+ * cannot be parsed or is not recognized.
  */
 DistortionType getDistortionModel(json isd, csm::WarningList *list) {
   std::string distortion;
