@@ -1841,9 +1841,8 @@ DistortionType getDistortionModel(json isd, csm::WarningList *list) {
     return DistortionType::CASSIS;
   }
 
-  // Fail loudly on an unrecognized model instead of silently defaulting to
-  // TRANSVERSE. A silent default applies the wrong distortion, or none, with no
-  // warning. This matches the behavior of ale's getDistortionModel.
+  // Throw on an unknown distortion model rather than silently defaulting to
+  // TRANSVERSE, matching ale's getDistortionModel.
   throw std::runtime_error("Unsupported distortion model: " + distortion);
 }
 
