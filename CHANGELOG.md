@@ -38,6 +38,9 @@ release.
 ### Added
 - A `CASSIS` distortion type implementing the TGO CaSSIS rational ratio-of-quadratics distortion model, matching ISIS `TgoCassisDistortionMap`, with the json-name, ALE integer-enum, and coefficient-extraction dispatch wired in. Pairs with the ALE TGO CaSSIS driver. [#512](https://github.com/DOI-USGS/usgscsm/pull/512)
 
+### Changed
+- Resolve the distortion type from an ISD using usgscsm's own `DistortionType` enum rather than mapping through ale's enum, and throw on an unknown or missing distortion model instead of silently defaulting to `TRANSVERSE`. [#526](https://github.com/DOI-USGS/usgscsm/pull/526)
+
 ### Fixed
 - `constructModelFromISD` now attempts the projected sensor model only when the ISD declares a projection (has a `geotransform`). A frame or unprojected linescan ISD is built directly, without the projected attempt that would always fail on the missing `geotransform` and log a misleading error on a normal load. A genuine failure of a projected ISD is still logged as an error. [#525](https://github.com/DOI-USGS/usgscsm/pull/525)
 - `applyDistortion` and `removeDistortion` now throw on a distortion type they do not handle instead of silently returning the point undistorted. This covers the `LUNARORBITER` type, which is declared and emitted by ALE but was never implemented here, and any type from a model state that this build does not recognize. Previously such a model was silently treated as distortion-free, producing wrong geometry with no warning. [#521](https://github.com/DOI-USGS/usgscsm/pull/521)

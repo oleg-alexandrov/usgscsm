@@ -1809,8 +1809,7 @@ VariantMap UsgsAstroFrameSensorModel::constructStateFromIsd(
   }
 
   // get optical_distortion
-  state["m_distortionType"] =
-      getDistortionModel(ale::getDistortionModel(parsedIsd));
+  state["m_distortionType"] = getDistortionModel(parsedIsd);
   state["m_opticalDistCoeffs"] = ale::getDistortionCoeffs(parsedIsd);
 
   // get detector_center
