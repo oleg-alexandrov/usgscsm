@@ -1507,10 +1507,10 @@ void UsgsAstroFrameSensorModel::populateModel(const VariantMap& state) {
     m_startingDetectorLine = state.get<double>("m_startingDetectorLine");
     
     LOG_TRACE( "Getting m_detectorSampleSumming");
-    m_detectorSampleSumming = state.get<int>("m_detectorSampleSumming");
+    m_detectorSampleSumming = state.get<double>("m_detectorSampleSumming");
     
     LOG_TRACE( "Getting m_detectorLineSumming");
-    m_detectorLineSumming = state.get<int>("m_detectorLineSumming");
+    m_detectorLineSumming = state.get<double>("m_detectorLineSumming");
     
     LOG_TRACE( "Getting m_focalLengthEpsilon");
     m_focalLengthEpsilon = state.get<double>("m_focalLengthEpsilon");

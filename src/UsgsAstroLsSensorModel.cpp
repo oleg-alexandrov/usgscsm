@@ -162,8 +162,8 @@ void UsgsAstroLsSensorModel::populateModel(const VariantMap& state) {
   m_startingEphemerisTime = state.get<double>("m_startingEphemerisTime");
   m_centerEphemerisTime = state.get<double>("m_centerEphemerisTime");
 
-  m_detectorSampleSumming = state.get<int>("m_detectorSampleSumming");
-  m_detectorLineSumming = state.get<int>("m_detectorLineSumming");
+  m_detectorSampleSumming = state.get<double>("m_detectorSampleSumming");
+  m_detectorLineSumming = state.get<double>("m_detectorLineSumming");
   m_startingDetectorSample = state.get<double>("m_startingDetectorSample");
   m_startingDetectorLine = state.get<double>("m_startingDetectorLine");
   m_ikCode = state.get<int>("m_ikCode");
