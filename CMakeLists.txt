@@ -70,8 +70,7 @@ set(USGSCSM_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/include/usgscsm"
 )
 
 # CSM API library
-find_path(CSM_INCLUDE_DIR NAMES "csm.h"
-                          PATH_SUFFIXES "csm"
+find_path(CSM_INCLUDE_DIR NAMES "csm/csm.h"
                           PATHS $ENV{CONDA_PREFIX}/include/
                           REQUIRED)
 find_library(CSM_LIBRARY csmapi PATHS $ENV{CONDA_PREFIX}/lib REQUIRED)

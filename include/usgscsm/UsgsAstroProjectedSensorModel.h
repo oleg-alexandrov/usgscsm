@@ -28,13 +28,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
 #ifndef __EMSCRIPTEN__
 // ProjectedSensorModel requires PROJ library which is not available in WASM builds
 
-#include <RasterGM.h>
-#include <SettableEllipsoid.h>
+#include <csm/RasterGM.h>
+#include <csm/SettableEllipsoid.h>
 
-#include<utility>
-#include<memory>
-#include<string>
-#include<vector>
+#include <utility>
+#include <memory>
+#include <string>
+#include <vector>
 
 #include "ale/Orientations.h"
 #include "ale/States.h"

@@ -33,7 +33,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
 #include <iostream>
 #include <sstream>
 
-#include <Error.h>
+#include <csm/Error.h>
 #include <nlohmann/json.hpp>
 
 #include "ale/Util.h"
