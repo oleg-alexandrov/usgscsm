@@ -1247,7 +1247,9 @@ std::string UsgsAstroPushFrameSensorModel::getReferenceDateAndTime() const {
       UsgsAstroPushFrameSensorModel::groundToImage(referencePointGround);
   double relativeTime =
       UsgsAstroPushFrameSensorModel::getImageTime(referencePointImage);
-  time_t ephemTime = m_centerEphemerisTime + relativeTime;
+  // Keep a double so the sub-second part survives (a time_t cast truncates to
+  // whole seconds).
+  double ephemTime = m_centerEphemerisTime + relativeTime;
 
   return ephemTimeToCalendarTime(ephemTime);
 }

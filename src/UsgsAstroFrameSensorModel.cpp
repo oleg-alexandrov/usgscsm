@@ -1186,7 +1186,11 @@ std::string UsgsAstroFrameSensorModel::getSensorMode() const {
  */
 std::string UsgsAstroFrameSensorModel::getReferenceDateAndTime() const {
   LOG_DEBUG( "Accessing reference data and time");
-  time_t ephemTime = m_ephemerisTime;
+  // Keep the ephemeris time as a double so the sub-second part survives. A
+  // time_t cast truncates it to whole seconds, which makes the reference time
+  // (and thus the serial number built from it) identical for images that fall
+  // in the same second, such as the framelets of a framing instrument.
+  double ephemTime = m_ephemerisTime;
 
   return ephemTimeToCalendarTime(ephemTime);
 }

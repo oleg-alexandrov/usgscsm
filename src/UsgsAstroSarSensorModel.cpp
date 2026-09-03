@@ -1855,7 +1855,9 @@ string UsgsAstroSarSensorModel::getReferenceDateAndTime() const {
   csm::ImageCoord referencePointImage = groundToImage(m_referencePointXyz);
   double relativeTime =
     UsgsAstroSarSensorModel::getImageTime(referencePointImage);
-  time_t ephemTime = m_centerEphemerisTime + relativeTime;
+  // Keep a double so the sub-second part survives (a time_t cast truncates to
+  // whole seconds).
+  double ephemTime = m_centerEphemerisTime + relativeTime;
 
   return ephemTimeToCalendarTime(ephemTime);
 }
