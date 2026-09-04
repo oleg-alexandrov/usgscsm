@@ -783,23 +783,15 @@ TEST_F(OrbitalFrameSensorModel, ReferenceDateTime) {
   EXPECT_EQ(date, "2000-01-01T12:15:35.816Z");
 }
 
-// The framelets of a framing instrument such as JunoCam are only a few
-// milliseconds apart. Their reference date and time, which ISIS turns into a
-// serial number, must stay distinct at that resolution or jigsaw rejects the
-// framelets as duplicate serial numbers. Regression test for the bug where the
-// ephemeris time was truncated to whole seconds, so framelets in the same
-// second produced an identical reference time.
+// JunoCam framelets are a few milliseconds apart, so their reference times (which
+// ISIS turns into serial numbers) must stay distinct. Bump the ephemeris time by
+// 3 ms and check the string changes; on the old whole-second code it would not.
 TEST_F(OrbitalFrameSensorModel, ReferenceDateTimeKeepsSubSecond) {
   std::string dateA = sensorModel->getReferenceDateAndTime();
-
-  // Build a model 3 ms later by bumping the ephemeris time in the state.
   std::string state = sensorModel->getModelState();
   size_t brace = state.find('{');
-  std::string name = state.substr(0, brace);
   json j = json::parse(state.substr(brace));
   j["m_ephemerisTime"] = j["m_ephemerisTime"].get<double>() + 0.003;
-  sensorModel->replaceModelState(name + j.dump());
-  std::string dateB = sensorModel->getReferenceDateAndTime();
-
-  EXPECT_NE(dateA, dateB);
+  sensorModel->replaceModelState(state.substr(0, brace) + j.dump());
+  EXPECT_NE(dateA, sensorModel->getReferenceDateAndTime());
 }
