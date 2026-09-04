@@ -2716,12 +2716,12 @@ std::string ephemTimeToCalendarTime(double ephemTime) {
   std::time_t utc_unix = (std::time_t)utc_exact;
   double frac = utc_exact - utc_unix;
   if (frac < 0) { utc_unix--; frac += 1.0; }
-  int msec = (int)(frac * 1000.0 + 0.5);
-  if (msec >= 1000) { utc_unix++; msec -= 1000; }
+  int usec = (int)(frac * 1000000.0 + 0.5);
+  if (usec >= 1000000) { utc_unix++; usec -= 1000000; }
 
   char buffer[32];
   strftime(buffer, 22, "%Y-%m-%dT%H:%M:%S", std::gmtime(&utc_unix));
-  snprintf(buffer + 19, 6, ".%03dZ", msec);
+  snprintf(buffer + 19, 9, ".%06dZ", usec);
   return buffer;
 }
 
